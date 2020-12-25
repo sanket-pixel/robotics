@@ -30,9 +30,27 @@ def motion_model(action, belief):
     elif action == -1 :
         return  np.dot(np.fliplr(motion_probabiity), shifted_belief)[0]
 
-# def sensor_model(observation, belief, world):
-    # add code here
+def sensor_model(observation, belief, world):
+    white_probability = np.array([0.1, 0.7])
+    black_probability = np.array([0.9, 0.3])
+    if observation == 0:
+        map_probability = np.where(world == 0, black_probability[0], black_probability[1])
+    elif observation == 1:
+        map_probability = np.where(world == 1, white_probability[1], white_probability[0])
+    corrected_belief = map_probability*belief
+    return corrected_belief/np.sum(corrected_belief)
 
-# def recursive_bayes_filter(actions, observations, belief, world):
-    # add code here
+
+
+def recursive_bayes_filter(actions, observations, belief, world):
+
+    for index in range(len(actions)):
+        current_observation = observations[index+1]
+        current_action = actions[index]
+        predicted_belief = motion_model(current_action, belief)
+        belief = sensor_model(current_observation, predicted_belief, world)
+        plot_belief(belief)
+
+    return belief
+
 
