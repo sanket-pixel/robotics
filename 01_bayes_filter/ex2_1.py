@@ -22,11 +22,17 @@ def plot_belief(belief):
     ax.title.set_text("Histogram")
 
 
-# def motion_model(action, belief):
-    # add code here
-    
+def motion_model(action, belief):
+    motion_probabiity = np.array([[0.7, 0.2, 0.1]])
+    shifted_belief = np.stack([np.roll(np.pad(belief,1), 1)[1:16], belief, np.roll(np.pad(belief,1), -1)[1:16]])
+    if action == 1 :
+        return np.dot(motion_probabiity, shifted_belief)[0]
+    elif action == -1 :
+        return  np.dot(np.fliplr(motion_probabiity), shifted_belief)[0]
+
 # def sensor_model(observation, belief, world):
     # add code here
 
 # def recursive_bayes_filter(actions, observations, belief, world):
     # add code here
+
